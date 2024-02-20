@@ -2,11 +2,24 @@
 <p align="center"> <img width="900" src="./docs/Figure1_Pipeline.png" /> </p>
 <!--asldfkj-->
 ---
-![GitHub Status](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)
+<!--![GitHub Status](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)-->
+<!--[![PyPI pyversions](https://img.shields.io/pypi/pyversions/shap)](https://pypi.org/pypi/shap/)-->
 
-**SDOH (Social Determinants of Health)** is XXX (see [papers](#citations) for details and citations).
+**SDOH (Social Determinants of Health)** 
 
-<!--**SHAP (SHapley Additive exPlanations)** is a unified approach to explain the output of any machine learning model. SHAP connects game theory with local explanations, uniting several previous methods [1-7] and representing the only possible consistent and locally accurate additive feature attribution method based on expectations (see our [papers](#citations) for details and citations).-->
+The Social Determinants of Health (SDOH) Code Repository was initially created for the research paper "XXX" but serves as a central hub for sharing, refining, and reusing code utilized in SDOH projects, including but not limited to CHoRUS projects (see [papers](#citations) for details and citations).
+
+Neighborhood-level SDOH (NL-SDOH) involve factors that characterize a patient's residential area, such as proximity to the hospital. The Social Vulnerability Index (SVI) is one of a neighborhood-level measure quantifying healthcare disparities risk across various subdomains based on the patient's neighborhood. NL-SDOH data in this repository were obtained from the Center for Disease Control and Prevention Agency for Toxic Substances and Disease Registry (CDC/ATSDR) of the U.S. Census Bureau. Later, other databases will be also included.
+
+**Geomapping pipeline** 
+
+A geomapping pipeline was developed to associate NL-SDOH. By leveraging patient home addresses within the electronic health record, we identified a unique census tract, enabling the linkage of individual patients to specific NL-SDOH (SVI) values. Address-to-SVI data linkages were then conducted offline on a secure institutional computer to ensure data privacy and security. Refer to the above figure for an illustration of this pipeline.
+
+1. The initial step in the NL-SDOH data linkage process involved acquiring a geographic information dictionary from the Census Bureau's Topologically Integrated Geographic Encoding and Referencing/Line (TIGER/Line) databases. 
+
+2. The subsequent step included determining Census tracts (Federal Information Processing Standards code [FIPS]) by utilizing geocodes associated with patient addresses or zip codes, through the TIGER/Line dictionary. Census tracts might not precisely align with a single zip code, establishing a potential many-to-many relationship with multiple zip codes. In instances where a patient only provided a zip code, we coded it to be linked with the relevant census tract FIPS code using proportion ratios, indicating the percentage of the zip code associated with specific census tracts. It's noteworthy that none of these cases were present in our final cohort.
+
+3. Subsequently, patient records were linked with their corresponding Social Vulnerability Index (SVI) values from the relevant database, based on their residence at the time of admission. To ensure a balanced representation, for geographic analyses, adjacent census tracts within the same county were consolidated using Federal Information Processing Standards (FIPS) codes, with a minimum threshold of 10 patients per census tract. This approach aimed to prevent overrepresentation and enhance the validity of the analysis.
 
 ## Install Required Packages
 
