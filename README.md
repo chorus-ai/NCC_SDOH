@@ -1,6 +1,6 @@
 <p align="center">
   Geomapping Pipeline
-  <img width="616" src="./docs/artwork/california_waterfall.png" />
+  <img width="616" src="./docs/Figure1_Pipeline.png" />
 </p>
 <!--asldfkj-->
 ---
