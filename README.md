@@ -1,4 +1,7 @@
 <p align="center">
+  <img width="616" src="./docs/Figure1_Pipeline.png" />
+</p>
+<p align="center">
   Geomapping Pipeline
   <img width="616" src="./docs/Figure1_Pipeline.png" />
 </p>
