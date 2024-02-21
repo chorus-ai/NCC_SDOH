@@ -94,6 +94,7 @@ total_zc_shp_dictionary = gpd.read_file(f"{path}/{'tl_2020_us_zcta520.shp'}").to
 total_zc_shp_dictionary.ZCTA5CE20 = total_zc_shp_dictionary.ZCTA5CE20.astype('int64')
 ```
 <p align="center"> <img src="./docs/Shape_ZipCode_Example.png" width="100%" /> </p>
+
 1. Certain patients may provide only their zip codes without specifying detailed addresses (FIPS).
 
 2. A single zip code can encompass multiple census tracts. Therefore, when establishing the link between zip code-FIPS-SVI, we employ ratio information to account for this variability.
