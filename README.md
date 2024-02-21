@@ -1,4 +1,4 @@
-<p align="center"> **Geomapping Pipeline** </p>
+**<p align="center"> Geomapping Pipeline </p>**
 <p align="center"> <img src="./docs/Figure1_Pipeline.png" width="100%" /> </p>
 <!--asldfkj-->
 
