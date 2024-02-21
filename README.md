@@ -61,6 +61,7 @@ Address_columns = ['PatientID', 'PatientEncounterID', 'LineNBR', 'AddressLine01T
 
 ## Data pre-processing
 1. Identify patients lacking documented home addresses
+
    For example,
    1) no information
    2) homeless/shelter
@@ -69,6 +70,7 @@ Address_columns = ['PatientID', 'PatientEncounterID', 'LineNBR', 'AddressLine01T
    5) unknown
       
 2. Identify patients with incomplete addresses
+   
    For example,
    1) zipCD is null
    2) CountryDSC != 'United States of America'
@@ -76,6 +78,7 @@ Address_columns = ['PatientID', 'PatientEncounterID', 'LineNBR', 'AddressLine01T
    However, often if CountryDSC is null, that can be considered as USA.
    
 3. Clean and standardize patient address data
+   
    For example,
    1) In the address, there can be 'post box' or 'email like @cultea.com', in County or any place. We would like to remove it through rule based methods.
 
