@@ -188,7 +188,3 @@ If you utilize the databases mentioned in the paper, please consider citing them
 - Tiger/Line Database: [TIGER/Line Shapefile](https://catalog.data.gov/dataset/tiger-line-shapefile-2019-2010-nation-u-s-2010-census-5-digit-zip-code-tabulation-area-zcta5-na).
 - CDC Database: [At A Glance: CDC/ATSDR Social Vulnerability Index](https://www.atsdr.cdc.gov/placeandhealth/svi/at-a-glance_svi.html).
 ```
-
-<!-- 
-<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=189147091855991&ev=PageView&noscript=1" />
--->
