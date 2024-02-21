@@ -111,6 +111,20 @@ filename = '/Users/username/NCC_SDOH_eLLST/Zip_TRACT/ZIP_TRACT_122022.xlsx'
 Zip_Tract_2022_4 = pd.read_excel(filename); Zip_Tract_2022_4['Zip_Tract_year'] = 2022; Zip_Tract_2022_4.columns = map(str.lower, Zip_Tract_2022_4.columns)
 Zip_Tract = pd.concat([Zip_Tract_2016_4, Zip_Tract_2017_4, Zip_Tract_2018_4, Zip_Tract_2019_4, Zip_Tract_2020_4, Zip_Tract_2021_4, Zip_Tract_2022_4])
 ```
+**Download SVI Databases** 
+```python
+#2018 datbase
+filename = '/Users/username/NCC_SDOH_eLLST/SVI2018_US.csv'
+SVI2018_US = pd.read_csv(filename, low_memory=False)
+SVI2018_US['FIPS'] = SVI2018_US['FIPS'].astype('float64')
+SVI2018_US['close_FIPS'] = SVI2018_US['FIPS']
+SVI2018_US = SVI2018_US[['FIPS', 'close_FIPS', 'RPL_THEME1', 'RPL_THEME2', 'RPL_THEME3', 'RPL_THEME4', 'RPL_THEMES', \
+'EPL_POV', 'EPL_UNEMP', 'EPL_PCI', 'EPL_NOHSDP', 'EPL_AGE65', 'EPL_AGE17', 'EPL_DISABL', 'EPL_SNGPNT', 'EPL_MINRTY', 'EPL_LIMENG', 'EPL_MUNIT', 'EPL_MOBILE', 'EPL_CROWD', 'EPL_NOVEH', 'EPL_GROUPQ']]
+
+#2020 datbase
+filename = '/Users/username/NCC_SDOH_eLLST/SVI2020_US.csv'
+SVI2020_US = pd.read_csv(filename, low_memory=False)
+```
 
 ## SVI Linkage
 1. Prepare Linkage Year
@@ -125,22 +139,14 @@ df_addr['SVILink_Year'] = np.where(df_addr['SVILink_Year'].isin([2018,2019,2020,
 ```
 
 2. Linkage (Census Tract/Zip Code)
-```python
-filename = '/Users/username/NCC_SDOH_eLLST/SVI2018_US.csv'
-SVI2018_US = pd.read_csv(filename, low_memory=False)
-SVI2018_US['FIPS'] = SVI2018_US['FIPS'].astype('float64')
-SVI2018_US['close_FIPS'] = SVI2018_US['FIPS']
-SVI2018_US = SVI2018_US[['FIPS', 'close_FIPS', 'RPL_THEME1', 'RPL_THEME2', 'RPL_THEME3', 'RPL_THEME4', 'RPL_THEMES', \
-'EPL_POV', 'EPL_UNEMP', 'EPL_PCI', 'EPL_NOHSDP', 'EPL_AGE65', 'EPL_AGE17', 'EPL_DISABL', 'EPL_SNGPNT', 'EPL_MINRTY', 'EPL_LIMENG', 'EPL_MUNIT', 'EPL_MOBILE', 'EPL_CROWD', 'EPL_NOVEH', 'EPL_GROUPQ']]
+We get FIPS code through longitude and latitude.
 
+```python
 gpoints = gpd.GeoDataFrame(
     df_addr[['PatientID','PatientEncounterID','HospAdmissionDate_Year','SVILink_Year', 'address_HospitalStay','lon','lat', 'zipCD']],\
     geometry=gpd.points_from_xy(df_addr.lon, df_addr.lat))
 result_shp = gpd.sjoin(gpoints, total_shp_dictionary, how="left", predicate="within").drop_duplicates()
 
-filename = '/Users/username/NCC_SDOH_eLLST/ZipCode/ZIP_TRACT_1121_1221.csv'
-CensusTract_Zip_match = pd.read_csv(filename, low_memory=False)
-   
 df_addr['zipCD'] = pd.to_numeric(df_addr['zipCD'], errors='coerce') 
 result_shp['CensusTract'] = result_shp['NAME'].astype(float)
 result_shp['GEOID'] = result_shp['GEOID'].astype(object)
@@ -150,26 +156,29 @@ result_shp['zipCD'] = result_shp['zipCD'].astype(int, errors='ignore')
 result_shp['zipCD'] = pd.to_numeric(result_shp['zipCD'], errors='coerce')
 ```
 
+We get FIPS code through zip code (zip - tract with ratios).
 
 ```python
 result_shp_nonNA = result_shp[~result_shp['lat'].isna()]
 result_shp_NA = result_shp[result_shp['lat'].isna()]
 result_shp_NA = result_shp_NA.merge(Zip_Tract[['zip','tract','zip_tract_year','res_ratio']], how='left', left_on=['zipCD','HospAdmissionDate_Year'], right_on=['zip','zip_tract_year'])
 
-result_shp_NA[(~result_shp_NA.zipCD.isna()) & (result_shp_NA.zip.isna())].shape[0], ": cannot help you",\
-result_shp_NA[(~result_shp_NA.zipCD.isna()) & (~result_shp_NA.zip.isna())].shape[0], ": can help you") 
-
 result_shp_NA['FIPS'] = result_shp_NA['tract']; result_shp_NA = result_shp_NA.drop(columns = ['zip', 'tract']) 
 result_shp = pd.concat([result_shp_NA.reset_index(drop=True), result_shp_nonNA.reset_index(drop=True)], axis = 0)
 result_shp = result_shp.drop(columns = ['zipCD', 'geometry', 'index_right'])
 ```
 
+We get SVI data through FIPS code.
 
 ```python
-result_shp1 = result_shp[(result_shp['FIPS'].isna())] #no FIPS at all
-result_shp2 = result_shp[(~result_shp['FIPS'].isna())&(result_shp['GEO_YN'] == 1)] #there was FIPS
-result_shp3 = result_shp[(~result_shp['FIPS'].isna())&(result_shp['GEO_YN'] == 0)] #no FIPS, but we filled them.
+#case 1. no FIPS at all
+result_shp1 = result_shp[(result_shp['FIPS'].isna())] 
+#case 2. FIPS available
+result_shp2 = result_shp[(~result_shp['FIPS'].isna())&(result_shp['GEO_YN'] == 1)] 
+#case 3. no FIPS, but we can fill them.
+result_shp3 = result_shp[(~result_shp['FIPS'].isna())&(result_shp['GEO_YN'] == 0)] 
 
+# allow_exact_matches can be an option, as well as using threshold and more specific conditions, such as state level.
 tmp2 = pd.merge_asof(result_shp2.sort_values("FIPS"), SVI2018_US.sort_values("FIPS"), 
     on="FIPS", direction="nearest", allow_exact_matches = True) 
 tmp2_columns = tmp2.columns
@@ -179,7 +188,6 @@ tmp3 = tmp3[tmp2_columns]
 tmp = pd.concat([tmp2, tmp3], axis=0).drop_duplicates()
 result_shp = pd.concat([result_shp2, result_shp3], axis=0).drop_duplicates()
 ```
-
 
 ## Sample Notebooks
 
