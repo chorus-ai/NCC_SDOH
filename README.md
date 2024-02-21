@@ -101,7 +101,6 @@ total_zc_shp_dictionary.ZCTA5CE20 = total_zc_shp_dictionary.ZCTA5CE20.astype('in
 
 **Download Zip Code - FIPS Databases** 
 ```python
-import geopandas
 filename = '/Users/username/NCC_SDOH_eLLST/Zip_TRACT/ZIP_TRACT_122016.xlsx'
 Zip_Tract_2016_4 = pd.read_excel(filename); Zip_Tract_2016_4['Zip_Tract_year'] = 2016; Zip_Tract_2016_4.columns = map(str.lower, Zip_Tract_2016_4.columns)
 ...
@@ -124,7 +123,6 @@ df_addr['SVILink_Year'] = np.where(df_addr['SVILink_Year'].isin([2018,2019,2020,
 
 2. Linkage (Census Tract/Zip Code)
 ```python
-import geopandas
 filename = '/Users/username/NCC_SDOH_eLLST/SVI2018_US.csv'
 SVI2018_US = pd.read_csv(filename, low_memory=False)
 SVI2018_US['FIPS'] = SVI2018_US['FIPS'].astype('float64')
@@ -132,9 +130,9 @@ SVI2018_US['close_FIPS'] = SVI2018_US['FIPS']
 SVI2018_US = SVI2018_US[['FIPS', 'close_FIPS', 'RPL_THEME1', 'RPL_THEME2', 'RPL_THEME3', 'RPL_THEME4', 'RPL_THEMES', \
 'EPL_POV', 'EPL_UNEMP', 'EPL_PCI', 'EPL_NOHSDP', 'EPL_AGE65', 'EPL_AGE17', 'EPL_DISABL', 'EPL_SNGPNT', 'EPL_MINRTY', 'EPL_LIMENG', 'EPL_MUNIT', 'EPL_MOBILE', 'EPL_CROWD', 'EPL_NOVEH', 'EPL_GROUPQ']]
 
-gpoints = geopandas.GeoDataFrame(
+gpoints = gpd.GeoDataFrame(
     df_addr[['PatientID','PatientEncounterID','HospAdmissionDate_Year','SVILink_Year', 'address_HospitalStay','lon','lat', 'zipCD']],\
-    geometry=geopandas.points_from_xy(df_addr.lon, df_addr.lat))
+    geometry=gpd.points_from_xy(df_addr.lon, df_addr.lat))
 result_shp = gpd.sjoin(gpoints, total_shp_dictionary, how="left", predicate="within").drop_duplicates()
 
 filename = '/Users/username/NCC_SDOH_eLLST/ZipCode/ZIP_TRACT_1121_1221.csv'
@@ -186,7 +184,8 @@ Explore various use cases for our geomapping pipeline through the provided noteb
 
 ## Citations
 
-The geomapping methodology outlined in this package originated from research conducted for the [NCC-SDOH paper](XXX) at Harvard Medical School and Massachusetts General Hospital. If you incorporate this methodology into your research, we kindly request that you cite the relevant paper(s):
+The geomapping methodology outlined in this package originated from research conducted for the [NCC-SDOH paper](XXX) at Harvard Medical School and Massachusetts General Hospital. 
+If you use code or concepts available in this repository, we would be grateful if you would cite the relevant paper(s):
 - For general use of geomapping, you can read/refer to our [NCC-SDOH paper](XXX) ([bibtex](XXX.bib)).
 
 If you utilize the databases mentioned in the paper, please consider citing them as well:
