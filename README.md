@@ -1,17 +1,19 @@
 
-<p align="center"> ## Geomapping Pipeline </p>
+**<p align="center"> Geomapping Pipeline </p>**
 <p align="center"> <img src="./docs/Figure1_Pipeline.png" width="100%" /> </p>
 <!--asldfkj-->
 
 <!--![GitHub Status](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)-->
 <!--[![PyPI pyversions](https://img.shields.io/pypi/pyversions/shap)](https://pypi.org/pypi/shap/)-->
 
+## Background 
 **SDOH (Social Determinants of Health)** 
 
 The Social Determinants of Health (SDOH) Code Repository was initially created for the research paper 'Social Determinants of Health and Limitation of Life-Sustaining Therapy in Neurocritical Care: A CHoRUS Pilot Project' but serves as a central hub for sharing, refining, and reusing code utilized in SDOH projects, including but not limited to CHoRUS projects (see [papers](#citations) for details and citations).
 
 Neighborhood-level SDOH (NL-SDOH) involve factors that characterize a patient's residential area, such as proximity to the hospital. The Social Vulnerability Index (SVI) is one of a neighborhood-level measure quantifying healthcare disparities risk across various subdomains based on the patient's neighborhood. NL-SDOH data in this repository were obtained from the Center for Disease Control and Prevention Agency for Toxic Substances and Disease Registry (CDC/ATSDR) of the U.S. Census Bureau. Later, other databases will be also included.
 
+## Outline
 **Geomapping pipeline** 
 
 A geomapping pipeline was developed to associate NL-SDOH. By leveraging patient home addresses within the electronic health record, we identified a unique census tract, enabling the linkage of individual patients to specific NL-SDOH (SVI) values. Address-to-SVI data linkages were then conducted offline on a secure institutional computer to ensure data privacy and security. Refer to the above figure for an illustration of this pipeline.
