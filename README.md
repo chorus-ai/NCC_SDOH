@@ -1,13 +1,13 @@
 <p align="center"> Geomapping Pipeline </p>
-<p align="center"> <img width="900" src="./docs/Figure1_Pipeline.png" /> </p>
+<p align="center"> <img src="./docs/Figure1_Pipeline.png" width="100%" /> </p>
 <!--asldfkj-->
----
+
 <!--![GitHub Status](https://github.com/github/docs/actions/workflows/main.yml/badge.svg)-->
 <!--[![PyPI pyversions](https://img.shields.io/pypi/pyversions/shap)](https://pypi.org/pypi/shap/)-->
 
 **SDOH (Social Determinants of Health)** 
 
-The Social Determinants of Health (SDOH) Code Repository was initially created for the research paper "XXX" but serves as a central hub for sharing, refining, and reusing code utilized in SDOH projects, including but not limited to CHoRUS projects (see [papers](#citations) for details and citations).
+The Social Determinants of Health (SDOH) Code Repository was initially created for the research paper 'Social Determinants of Health and Limitation of Life-Sustaining Therapy in Neurocritical Care: A CHoRUS Pilot Project' but serves as a central hub for sharing, refining, and reusing code utilized in SDOH projects, including but not limited to CHoRUS projects (see [papers](#citations) for details and citations).
 
 Neighborhood-level SDOH (NL-SDOH) involve factors that characterize a patient's residential area, such as proximity to the hospital. The Social Vulnerability Index (SVI) is one of a neighborhood-level measure quantifying healthcare disparities risk across various subdomains based on the patient's neighborhood. NL-SDOH data in this repository were obtained from the Center for Disease Control and Prevention Agency for Toxic Substances and Disease Registry (CDC/ATSDR) of the U.S. Census Bureau. Later, other databases will be also included.
 
@@ -25,38 +25,87 @@ A geomapping pipeline was developed to associate NL-SDOH. By leveraging patient 
 
 All the required packages can be installed as below:
 <pre>
-pip install package (package: )
-<i>or</i>
-conda install -c conda-forge shap
+pip install package_name (packages: pandas, numpy, gc, pyshp)
 </pre>
 
-## Check 
-
-While SHAP can explain the output of any machine learning model, we have developed a high-speed exact algorithm for tree ensemble methods (see our [Nature MI paper](https://rdcu.be/b0z70)). Fast C++ implementations are supported for *XGBoost*, *LightGBM*, *CatBoost*, *scikit-learn* and *pyspark* tree models:
+## Load Packages 
 
 ```python
-import xgboost
-import shap
-
-# train an XGBoost model
-X, y = shap.datasets.california()
-model = xgboost.XGBRegressor().fit(X, y)
-
-# explain the model's predictions using SHAP
-# (same syntax works for LightGBM, CatBoost, scikit-learn, transformers, Spark, etc.)
-explainer = shap.Explainer(model)
-shap_values = explainer(X)
-
-# visualize the first prediction's explanation
-shap.plots.waterfall(shap_values[0])
+import pandas as pd
+import numpy as np
+#import datetime
+#from datetime import timedelta
+#import hashlib
+import gc
+import os
+import geopandas as gpd
+from shapely.geometry import Polygon
+from shapely.geometry import Polygon, Point, MultiPolygon
+import shapefile 
+from geopandas import GeoDataFrame
+import pandas as pd
 ```
 
-
+## Data Load
 
 ```python
-# visualize the first prediction's explanation with a force plot
-shap.plots.force(shap_values[0])
+gc.collect()
+df = pd.read_csv('C:/Users/username/NCC_SDOH_eLLST/patient_information.csv', low_memory=False)
+
+print("df shape:", df.shape, len(df['PatientID'].unique()), len(df['PatientEncounterID'].unique()))
+
+Address_columns = ['PatientID', 'PatientEncounterID', 'LineNBR', 'AddressLine01TXT', 'CityNM', 'StateDSC', 'CountryDSC', 'zipCD', 'AddressTXT']
 ```
+
+## Data pre-processing
+1. Identify patients lacking documented home addresses
+   For example,
+   1) no information
+   2) homeless/shelter
+   3) hospice
+   4) rehab
+   5) unknown
+      
+2. Identify patients with incomplete addresses
+   For example,
+   1) zipCD is null
+   2) CountryDSC != 'United States of America'
+    
+   However, often if CountryDSC is null, that can be considered as USA.
+   
+3. Clean and standardize patient address data
+   For example,
+   1) In the address, there can be 'post box' or 'email like @cultea.com', in County or any place. We would like to remove it through rule based methods.
+
+
+## SVI Linkage
+1. Yearly Linkage
+
+```python
+df['HospAdmissionDate_Year'] = pd.to_datetime(df['HospAdmissionDate']).dt.year
+df['SVILink_Year'] = np.where(df['HospAdmissionDate_Year'].isin([2016,2017]), 2018, df['HospAdmissionDate_Year'] )
+df['SVILink_Year'] = np.where(df['SVILink_Year'].isin([2018,2019,2020,2021,2022]), 2018, df['SVILink_Year'] )
+
+
+df_addr['HospAdmissionDate_Year'] = pd.to_datetime(df_addr['HospAdmissionDate']).dt.year
+df_addr['SVILink_Year'] = np.where(df_addr['HospAdmissionDate_Year'].isin([2016,2017]), 2018, df_addr['HospAdmissionDate_Year'] )
+df_addr['SVILink_Year'] = np.where(df_addr['SVILink_Year'].isin([2018,2019,2020,2021,2022]), 2018, df_addr['SVILink_Year'] )
+
+
+```
+
+## Load SVI Database
+1.
+path = 'C:\\username\\NCC_SDOH_eLLST\\ZipCode\\zcta520\\' 
+total_zc_shp_dictionary = gpd.read_file(f"{path}\{'tl_2020_us_zcta520.shp'}").to_crs('EPSG:4326') 
+total_zc_shp_dictionary.ZCTA5CE20 = total_zc_shp_dictionary.ZCTA5CE20.astype('int64')
+
+path = 'C:\\username\\NCC_SDOH_eLLST\\CensusTractShpFile2022\\allinone' 
+total_shp_dictionary = gpd.read_file(f"{path}\{'total_shp.shp'}").to_crs('EPSG:4326') 
+
+
+
+
 
 <p align="center">
   <img width="811" src="./docs/artwork/california_instance.png" />
