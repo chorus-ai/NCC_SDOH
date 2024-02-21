@@ -95,6 +95,7 @@ total_zc_shp_dictionary.ZCTA5CE20 = total_zc_shp_dictionary.ZCTA5CE20.astype('in
 ```
 <p align="center"> <img src="./docs/Shape_ZipCode_Example.png" width="100%" /> </p>
 1. Certain patients may provide only their zip codes without specifying detailed addresses (FIPS).
+
 2. A single zip code can encompass multiple census tracts. Therefore, when establishing the link between zip code-FIPS-SVI, we employ ratio information to account for this variability.
 
 **Download Zip Code - FIPS Databases** 
