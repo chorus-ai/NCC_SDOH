@@ -203,3 +203,33 @@ If you utilize the databases mentioned in the paper, please consider citing them
 - Tiger/Line Database: [TIGER/Line Shapefile](https://catalog.data.gov/dataset/tiger-line-shapefile-2019-2010-nation-u-s-2010-census-5-digit-zip-code-tabulation-area-zcta5-na).
 - CDC Database: [At A Glance: CDC/ATSDR Social Vulnerability Index](https://www.atsdr.cdc.gov/placeandhealth/svi/at-a-glance_svi.html).
 
+
+
+<!--
+## Reporting Issues
+
+Before submitting a pull request, please ensure you've searched for existing issues that may already address the problem you're encountering. If an issue doesn't already exist, you can create a new one:
+
+1. Navigate to the repository's "Issues" tab.
+2. Click on "New Issue".
+3. Provide a descriptive title for the issue.
+4. Fill in the template, detailing the problem, steps to reproduce, expected outcome, and any additional information that might help.
+5. Attach any relevant screenshots or logs.
+6. Submit the issue. -->
+
+## Contact
+
+To request access to contribution or for further queries: 
+[hkwak1@mgh.harvard.edu](mailto:hkwak1@mgh.harvard.edu)
+
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the [LICENSE](LICENSE) file for more details.
+
+
+<!--
+## Acknowledgements
+
+
+in progress...-->
